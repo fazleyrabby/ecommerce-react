@@ -4,8 +4,8 @@ import { useForm, FormProvider } from 'react-hook-form'
 import FormInput from './FormInput'
 import { commerce } from '../../lib/commerce'
 import { Link } from 'react-router-dom'
-import { method } from 'bluebird'
-const AddressForm = ({ checkoutToken }) => {
+
+const AddressForm = ({ checkoutToken, next }) => {
     const [shippingCountries, setshippingCountries] = useState([])
     const [shippingCountry, setshippingCountry] = useState('')
     const [shippingSubdivisions, setshippingSubdivisions] = useState([])
@@ -55,8 +55,7 @@ const AddressForm = ({ checkoutToken }) => {
         <>
             <Typography variant="h6" gutterBottom>Shipping Address</Typography>
             <FormProvider {...methods}>
-                {/* <form onSubmit={method.handleSubmit((data)=> )}> */}
-                <form onSubmit=''>
+                <form onSubmit={methods.handleSubmit((data)=> next({ ...data, shippingCountry, shippingSubdivision, shippingOption }) )}>
                     <Grid container spacing={3}>
                         <FormInput required name='firstname' label='First Name'/>
                         <FormInput required name='lastname' label='Last Name'/>
@@ -76,7 +75,8 @@ const AddressForm = ({ checkoutToken }) => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <InputLabel>Shipping Sub division</InputLabel>
-                            <Select value={shippingSubdivision} 
+                            <Select 
+                            value={shippingSubdivision} 
                             fullWidth  
                             onChange={(e)=> setshippingSubdivision(e.target.value)}>
                                 {subdivisions.map((subdivision) => (
@@ -86,7 +86,9 @@ const AddressForm = ({ checkoutToken }) => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <InputLabel>Shipping Options</InputLabel>
-                            <Select value={shippingOption} fullWidth  
+                            <Select 
+                            value={shippingOption} 
+                            fullWidth  
                             onChange={(e)=> setshippingOption(e.target.value)}>
                                 {options.map((option) => (
                                     <MenuItem key={option.id} value={option.id}>{option.label}</MenuItem>
@@ -94,12 +96,12 @@ const AddressForm = ({ checkoutToken }) => {
                             </Select>
                         </Grid>
                     </Grid>
-                </form>
                 <br />
                 <div style={{ display:'flex',justifyContent:'space-between' }}>
                     <Button component={Link} to="/cart" variant="outlined">Back to Cart</Button>
                     <Button type="submit" variant="contained" color="primary">Next</Button>
                 </div>
+                </form>
             </FormProvider>
         </>
     )
